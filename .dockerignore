@@ -9,3 +9,6 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+/Docker/entrypoint.sh
+docker-compose.yml
+supervisord.conf
