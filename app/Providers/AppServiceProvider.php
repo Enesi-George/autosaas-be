@@ -10,6 +10,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
+use Illuminate\Routing\UrlGenerator;
+
 
 
 
@@ -27,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot(UrlGenerator $url): void
     {
         Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
             $openApi->secure(SecurityScheme::http('bearer'));
@@ -41,6 +43,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('viewApiDocs', function (User $user) {
             return true; //in_array($user->email, ['admin@app.com']);
         });
+        
+        //render https in production
+        if (env('APP_ENV') == 'production') {
+            $url->forceScheme('https');
+        }
     }
 }
 
