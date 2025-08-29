@@ -4,5 +4,5 @@ namespace App\Enums;
 
 enum UniversityEnum: string
 {
-    case TULSA = "tulsa";
+    case UNIVERSITY_OF_TULSA = "University of Tulsa";
 }

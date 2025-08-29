@@ -11,13 +11,13 @@ use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
-        private const CLOUDINARY_FOLDER = 'users_documents';
+    private const CLOUDINARY_FOLDER = 'users_documents';
     private $cloudinary;
 
     public function __construct(private PaymentController $paymentController)
     {
         $this->paymentController = $paymentController;
-        
+
         // Initialize Cloudinary
         Configuration::instance([
             'cloud' => [
@@ -29,7 +29,7 @@ class RegisterController extends Controller
                 'secure' => true
             ]
         ]);
-        
+
         $this->cloudinary = new Cloudinary();
     }
     /**
@@ -56,7 +56,6 @@ class RegisterController extends Controller
     {
         try {
             $validated = $request->validated();
-
             // Handle file uploads if documents are provided using the private method
             if ($request->hasFile('documents')) {
                 $documents = $request->file('documents');
@@ -88,12 +87,12 @@ class RegisterController extends Controller
         }
     }
 
-        private function uploadDocuments(array $documents)
+    private function uploadDocuments(array $documents)
     {
         try {
             return array_map(function ($document) {
                 $folderName = self::CLOUDINARY_FOLDER;
-                
+
                 $uploadResponse = $this->cloudinary->uploadApi()->upload(
                     $document->getRealPath(),
                     [
@@ -101,7 +100,7 @@ class RegisterController extends Controller
                         'resource_type' => 'auto'
                     ]
                 );
-                
+
                 return $uploadResponse['secure_url'];
             }, $documents);
         } catch (Exception $e) {

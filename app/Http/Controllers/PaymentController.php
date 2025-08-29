@@ -55,16 +55,18 @@ class PaymentController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->paystackSecretKey,
                 'Content-Type' => 'application/json',
-            ])->post('https://api.paystack.co/transaction/initialize', [
-                'email' => $request->email,
-                'amount' => $this->paymentAmount,
-                'reference' => $reference,
-                'callback_url' => config('app.frontend_url') . '/payment/callback',
-                'metadata' => [
-                    'purpose' => 'user_onboarding',
-                    'user_email' => $request->email,
-                ]
-            ]);
+            ])
+                ->timeout(15) // 15s max
+                ->post('https://api.paystack.co/transaction/initialize', [
+                    'email' => $request->email,
+                    'amount' => $this->paymentAmount,
+                    'reference' => $reference,
+                    'callback_url' => config('app.frontend_url') . '/apply?reference=' . $reference,
+                    'metadata' => [
+                        'purpose' => 'user_onboarding',
+                        'user_email' => $request->email,
+                    ]
+                ]);
 
             if (!$response->successful()) {
                 throw new \Exception('Failed to initialize payment: ' . $response->body());
