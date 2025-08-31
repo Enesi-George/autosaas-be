@@ -15,11 +15,12 @@ php artisan route:cache
 echo "generating app key..."
 php artisan key:generate --force
 
+echo "clear migrations..."
+php artisan migrate:fresh --force
+
 echo "Running migrations..."
 php artisan migrate --force
 
-echo "database seeder seeding super-admin user"
-php artisan db:seed --force
 
 echo "Removing dev dependencies..."
 composer install --no-dev --working-dir=/var/www/html
