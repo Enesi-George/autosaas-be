@@ -9,8 +9,14 @@ export PATH=/usr/local/bin:$PATH
 # Set Laravel environment
 export APP_ENV=production
 
-# Run the queue worker
-/usr/local/bin/php artisan queue:work --stop-when-empty --max-time=50 --sleep=3 --tries=3
-
-# Log the execution
-echo "Queue worker executed at $(date)" >> /home/autowqrj/queue_worker.log
+# Run the queue worker continuously with shorter intervals
+while true; do
+    # Run queue worker to process available jobs with shorter timeout
+    /usr/local/bin/php artisan queue:work --max-time=295 --sleep=3 --tries=3
+    
+    # Short pause before checking for new jobs again (5 seconds)
+    sleep 5
+    
+    # Log the execution
+    echo "Queue worker cycle completed at $(date)" >> /home/autowqrj/queue_worker.log
+done
