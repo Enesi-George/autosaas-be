@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -43,8 +44,8 @@ class OnBoardingMail extends Mailable
         return new Content(
             view: 'emails.onboarding',
             with: [
-                'user' =>$this->user,
-                'password' => $this->userRawPassword
+                'user' => $this->user,
+                'password' => $this->userRawPassword,
             ]
         );
     }
@@ -56,6 +57,10 @@ class OnBoardingMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return [
+            Attachment::fromPath(public_path('images/company-logo.png'))
+                ->as('autosaas.png')
+                ->withMime('image/png'),
+        ];
     }
 }

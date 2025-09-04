@@ -17,7 +17,7 @@ class PaymentController extends Controller
 {
     private $paystackSecretKey;
     private $paystackPublicKey;
-    private $paymentAmount = 1000000; // 10,000 Naira in kobo
+    private $paymentAmount = 550000; // 10,000 Naira in kobo
 
     public function __construct()
     {

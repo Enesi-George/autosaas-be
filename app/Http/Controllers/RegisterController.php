@@ -8,6 +8,7 @@ use Cloudinary\Configuration\Configuration;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
 {
@@ -87,7 +88,7 @@ class RegisterController extends Controller
         }
     }
 
-    private function uploadDocuments(array $documents)
+    private function cloundinaryDocumentsUpload(array $documents)
     {
         try {
             return array_map(function ($document) {
@@ -107,6 +108,33 @@ class RegisterController extends Controller
             logger('error from the upload function', [$e]);
             throw new Exception('Document upload failed: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Upload multiple documents to storage
+     */
+    private function uploadDocuments($documents): array
+    {
+        $filePaths = [];
+
+        foreach ($documents as $document) {
+            $extension = $document->getClientOriginalExtension();
+            $filename = Str::uuid() . '.' . $extension;
+
+            // Store in public disk under documents/users directory
+            $path = $document->storeAs('documents/users', $filename, 'public');
+
+            $filePaths[] = [
+                'original_name' => $document->getClientOriginalName(),
+                'storage_path' => $path,
+                'file_name' => $filename,
+                'mime_type' => $document->getMimeType(),
+                'size' => $document->getSize(),
+                'url' => Storage::disk('public')->url($path),
+            ];
+        }
+
+        return $filePaths;
     }
 
     /**
