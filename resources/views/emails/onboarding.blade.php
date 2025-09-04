@@ -101,7 +101,7 @@
             <p>The AUTOSAAS Team</p>
 
             <div class="footer">
-                <img src="cid:company-logo.png" alt="Autosaas-logo" />
+                <img src="cid:autosaas.png" alt="Autosaas-logo" />
                 <h1>AUTOSAAS</h1>
             </div>
         </div>
