@@ -115,28 +115,18 @@ class RegisterController extends Controller
      */
     private function uploadDocuments($documents): array
     {
-        $filePaths = [];
+        $urls = [];
 
         foreach ($documents as $document) {
             $extension = $document->getClientOriginalExtension();
             $filename = Str::uuid() . '.' . $extension;
-
-            // Store in public disk under documents/users directory
             $path = $document->storeAs('documents/users', $filename, 'public');
 
-            $filePaths[] = [
-                'original_name' => $document->getClientOriginalName(),
-                'storage_path' => $path,
-                'file_name' => $filename,
-                'mime_type' => $document->getMimeType(),
-                'size' => $document->getSize(),
-                'url' => Storage::disk('public')->url($path),
-            ];
+            $urls[] = Storage::disk('public')->url($path);
         }
 
-        return $filePaths;
+        return $urls;
     }
-
     /**
      * Display the specified resource.
      */
