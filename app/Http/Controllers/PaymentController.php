@@ -288,7 +288,7 @@ class PaymentController extends Controller
                 'data' => [
                     'reference' => $payment->reference,
                     'status' => $payment->status,
-                    'amount' => $payment->amount,
+                    'amount' => $payment->amount /100,
                     'email' => $payment->email,
                     'paid_at' => $payment->paid_at,
                 ]
