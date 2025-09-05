@@ -218,6 +218,14 @@ class PaymentController extends Controller
 
             $userRawPassword = $userData['password']; //get the raw pwd
 
+            // Fix escaped slashes in document URLs (if documents exist)
+            if (isset($userData['documents']) && is_array($userData['documents'])) {
+                $userData['documents'] = array_map(function ($url) {
+                    return str_replace('\/', '/', $url);
+                }, $userData['documents']);
+            }
+            logger('document_url', [$userData['documents']]);
+
             // Hash password if provided
             if (isset($userData['password'])) {
                 $userData['password'] = bcrypt($userData['password']);
@@ -288,7 +296,7 @@ class PaymentController extends Controller
                 'data' => [
                     'reference' => $payment->reference,
                     'status' => $payment->status,
-                    'amount' => $payment->amount /100,
+                    'amount' => $payment->amount / 100,
                     'email' => $payment->email,
                     'paid_at' => $payment->paid_at,
                 ]
